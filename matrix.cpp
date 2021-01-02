@@ -30,7 +30,7 @@ void Matrix::initRange(){
 	}
 }
 
-void Matrix::initNormal(const int seed) {
+void Matrix::initNormal(const int seed){
 	// Initialise the matrix with random values from a Normal(0, 1) distribution.
 	std::default_random_engine gen(seed);
 	std::normal_distribution<float> normal;
@@ -79,6 +79,25 @@ Matrix Matrix::add(Matrix other){
 
 }
 
+Matrix Matrix::sub(Matrix other){
+	// Check that dimensions are valid for addition
+	if (width != other.width) {
+		printf("Shape mismatch for matrices: (%d, %d), (%d, %d)", height, width, other.height, other.width);
+		throw std::invalid_argument("Shape mismatch for matrices.");
+	}
+
+
+	Matrix newMat(height, width);
+	if (height == other.height) {
+		::subMatrixMatrix(data, other.data, newMat.data, height, width);
+	} else {
+		::subMatrixVector(data, other.data, newMat.data, height, width);
+	}
+
+	return newMat;
+
+}
+
 void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common){
 	// Matrix multiplication
 	// a: array of shape (height, common)
@@ -117,6 +136,33 @@ void addMatrixVector(const float* a, const float* b, float* out, const int heigh
 	for (auto i = 0; i < height; ++i) {
 		for (auto j = 0; j < width; ++j) {
 			out[i * width + j] = a[i * width + j] + b[j];
+		}
+	}
+}
+
+
+void subMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width){
+	// Matrix Subtraction A - B
+	// a: array of shape (height, width)
+	// b: array of shape (height, width)
+	// out: array of shape (height, width), output of calculation
+
+	for (auto i = 0; i < height; ++i) {
+		for (auto j = 0; j < width; ++j) {
+			out[i * width + j] = a[i * width + j] - b[i * width + j];
+		}
+	}
+}
+
+void subMatrixVector(const float* a, const float* b, float* out, const int height, const int width){
+	// Matrix-Vector Subtraction A - B
+	// a: array of shape (height, width)
+	// b: array of shape (width,)
+	// out: array of shape (height, width), output of calculation
+
+	for (auto i = 0; i < height; ++i) {
+		for (auto j = 0; j < width; ++j) {
+			out[i * width + j] = a[i * width + j] - b[j];
 		}
 	}
 }

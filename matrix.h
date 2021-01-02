@@ -16,6 +16,8 @@ public:
 	Matrix matmul(Matrix other);
 
 	Matrix add(Matrix other);
+
+	Matrix sub(Matrix other);
 };
 
 void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common);
@@ -23,3 +25,7 @@ void matmul(const float* a, const float* b, float* out, const int height, const 
 void addMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width);
 
 void addMatrixVector(const float* a, const float* b, float* out, const int height, const int width);
+
+void subMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width);
+
+void subMatrixVector(const float* a, const float* b, float* out, const int height, const int width);

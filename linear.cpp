@@ -1,7 +1,8 @@
 #include "linear.h"
 
-#include <iostream>
 #include <ctime>
+#include <iostream>
+#include <tuple>
 
 
 Linear::Linear(int input_size, int units){
@@ -36,4 +37,44 @@ Matrix Linear::forward(Matrix input){
 	// input: array of size (height, width)
 
 	return input.matmul(*weights).add(*biases);
+}
+
+std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linearOutput, Matrix target){
+	// Computes gradient
+
+	// D = Y - Y*
+	Matrix diff = target.sub(linearOutput);
+	std::cout << "Difference:\n";
+	diff.print();
+
+	// Bias gradient
+	// Gb = D
+	Matrix gradBias = Matrix(1, biases->width);
+	for (int i = 0; i < input.height; ++i) {
+		// Over batch
+		for (int j = 0; j < biases->width; ++j) {
+			// Over nodes
+			gradBias.data[j] += diff.data[i * biases->width + j];
+		}
+	}
+
+
+	// Weight gradient
+	// Gw = DX
+	Matrix gradWeights = Matrix(weights->height, weights->width);
+
+	for (int k = 0; k < input.height; ++k) {
+		// Over batch
+		for (int i = 0; i < weights->width; ++i) {
+			// Over nodes
+			for (int j = 0; j < weights->height; ++j) {
+				// Over params
+				gradWeights.data[j * weights->width + i] += diff.data[i] *
+					input.data[k * input.width + j];
+			}
+		}
+	}
+
+	return std::make_tuple(gradWeights, gradBias);
+
 }

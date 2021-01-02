@@ -5,6 +5,7 @@
 
 #include "matrix.h"
 #include "linear.h"
+#include <tuple>
 
 void testMatOps(){
 	Matrix a(4, 3), b(3, 5), d(1, 5);
@@ -21,19 +22,31 @@ void testMatOps(){
 	std::cout << "D\n";
 	d.print();
 
+	// MatMul
 	Matrix c = a.matmul(b);
 	std::cout << "C = AB\n";
 	c.print();
 
-
+	// Mat-Mat Addition
 	Matrix e = a.add(a);
 	std::cout << "E = A + A\n";
 	e.print();
 
+	// Mat-Vec Addition
 	Matrix f = c.add(d);
 	std::cout << "F = C + D\n";
 	f.print();
-	
+
+	// Mat-Mat Subtraction
+	Matrix g = a.sub(a);
+	std::cout << "G = A - A\n";
+	g.print();
+
+	// Mat-Vec Subtraction
+	Matrix h = c.sub(d);
+	std::cout << "H = C - D\n";
+	h.print();
+
 }
 
 void testLinear(){
@@ -50,11 +63,23 @@ void testLinear(){
 	Matrix out = linear.forward(input);
 	std::cout << "Output:\n";
 	out.print();
-	
-	
+
+	Matrix targets = Matrix(3, 8);
+	targets.initRange();
+	std::cout << "Targets:\n";
+	targets.print();
+
+	auto [gradWeights, gradBiases] = linear.calculateGradient(input, out, targets);
+	std::cout << "Gradients:\n" << "Weights:\n";
+	gradWeights.print();
+	std::cout << "Biases:\n";
+	gradBiases.print();
+
+
 }
 
 int main(){
 	std::cout << "Hello World!\n";
+	// testMatOps();
 	testLinear();
 }

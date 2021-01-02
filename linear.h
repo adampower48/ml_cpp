@@ -1,5 +1,9 @@
 #pragma once
+#include <tuple>
+#include <utility>
+
 #include "matrix.h"
+
 
 class Linear {
 public:
@@ -17,4 +21,6 @@ public:
 	void print();
 
 	Matrix forward(Matrix input);
+
+	std::tuple<Matrix, Matrix> calculateGradient(Matrix input, Matrix linearOutput, Matrix target);
 };
