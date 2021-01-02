@@ -3,7 +3,7 @@ class Matrix {
 public:
 	int height;
 	int width;
-	int* data;
+	float* data;
 
 	Matrix(int, int);
 
@@ -16,8 +16,8 @@ public:
 	Matrix add(Matrix other);
 };
 
-void matmul(const int* a, const int* b, int* out, const int height, const int width, const int common);
+void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common);
 
-void addMatrixMatrix(const int* a, const int* b, int* out, const int height, const int width);
+void addMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width);
 
-void addMatrixVector(const int* a, const int* b, int* out, const int height, const int width);
+void addMatrixVector(const float* a, const float* b, float* out, const int height, const int width);

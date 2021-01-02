@@ -9,7 +9,7 @@
 Matrix::Matrix(int h, int w){
 	height = h;
 	width = w;
-	data = new int[h * w]{0}; // init to 0
+	data = new float[h * w]{0}; // init to 0
 }
 
 void Matrix::print(){
@@ -25,7 +25,7 @@ void Matrix::print(){
 void Matrix::initRange(){
 	// Initialise the matrix with an increasing sequence of values
 	for (auto i = 0; i < height * width; ++i) {
-		data[i] = i;
+		data[i] = static_cast<float>(i);
 	}
 }
 
@@ -68,7 +68,7 @@ Matrix Matrix::add(Matrix other){
 
 }
 
-void matmul(const int* a, const int* b, int* out, const int height, const int width, const int common){
+void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common){
 	// Matrix multiplication
 	// a: array of shape (height, common)
 	// b: array of shape (common, width)
@@ -84,7 +84,7 @@ void matmul(const int* a, const int* b, int* out, const int height, const int wi
 	}
 }
 
-void addMatrixMatrix(const int* a, const int* b, int* out, const int height, const int width){
+void addMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width){
 	// Matrix Addition
 	// a: array of shape (height, width)
 	// b: array of shape (height, width)
@@ -97,7 +97,7 @@ void addMatrixMatrix(const int* a, const int* b, int* out, const int height, con
 	}
 }
 
-void addMatrixVector(const int* a, const int* b, int* out, const int height, const int width){
+void addMatrixVector(const float* a, const float* b, float* out, const int height, const int width){
 	// Matrix-Vector Addition
 	// a: array of shape (height, width)
 	// b: array of shape (width,)
