@@ -23,4 +23,6 @@ public:
 	Matrix forward(Matrix input);
 
 	std::tuple<Matrix, Matrix> calculateGradient(Matrix input, Matrix linearOutput, Matrix target);
+
+	void updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate);
 };

@@ -78,3 +78,15 @@ std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linear
 	return std::make_tuple(gradWeights, gradBias);
 
 }
+
+void Linear::updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate){
+	// Update biases
+	for (int i = 0; i < biases->width; ++i) {
+		biases->data[i] += gradWeights.data[i] * learningRate;
+	}
+
+	// Update weights
+	for (int i = 0; i < weights->height * weights->width; ++i) {
+		weights->data[i] += gradWeights.data[i] * learningRate;
+	}
+}

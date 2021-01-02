@@ -1,11 +1,12 @@
 // matrix_ops.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-
 #include "matrix.h"
-#include "linear.h"
+
+#include <iostream>
 #include <tuple>
+
+#include "linear.h"
 
 void testMatOps(){
 	Matrix a(4, 3), b(3, 5), d(1, 5);
@@ -70,10 +71,14 @@ void testLinear(){
 	targets.print();
 
 	auto [gradWeights, gradBiases] = linear.calculateGradient(input, out, targets);
-	std::cout << "Gradients:\n" << "Weights:\n";
+	std::cout << "\nGradients:\n" << "Weights:\n";
 	gradWeights.print();
 	std::cout << "Biases:\n";
 	gradBiases.print();
+
+	linear.updateWeights(gradWeights, gradBiases, 0.01);
+	std::cout << "Updated:\n";
+	linear.print();
 
 
 }

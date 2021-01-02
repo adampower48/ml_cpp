@@ -1,8 +1,8 @@
 #include "matrix.h"
 
 #include <iostream>
-#include <vector>
 #include <random>
+#include <vector>
 
 #include "helpers.h"
 
