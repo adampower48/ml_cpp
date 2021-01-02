@@ -39,13 +39,9 @@ Matrix Linear::forward(Matrix input){
 	return input.matmul(*weights).add(*biases);
 }
 
-std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linearOutput, Matrix target){
+std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix nextGrads){
 	// Computes gradient
 
-	// D = Y - Y*
-	Matrix diff = target.sub(linearOutput);
-	std::cout << "Difference:\n";
-	diff.print();
 
 	// Bias gradient
 	// Gb = D
@@ -54,7 +50,7 @@ std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linear
 		// Over batch
 		for (int j = 0; j < biases->width; ++j) {
 			// Over nodes
-			gradBias.data[j] += diff.data[i * biases->width + j];
+			gradBias.data[j] += nextGrads.data[i * nextGrads.width + j];
 		}
 	}
 
@@ -69,7 +65,7 @@ std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linear
 			// Over nodes
 			for (int j = 0; j < weights->height; ++j) {
 				// Over params
-				gradWeights.data[j * weights->width + i] += diff.data[i] *
+				gradWeights.data[j * weights->width + i] += nextGrads.data[k * nextGrads.width + i] *
 					input.data[k * input.width + j];
 			}
 		}
@@ -82,7 +78,7 @@ std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix linear
 void Linear::updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate){
 	// Update biases
 	for (int i = 0; i < biases->width; ++i) {
-		biases->data[i] += gradWeights.data[i] * learningRate;
+		biases->data[i] += gradBiases.data[i] * learningRate;
 	}
 
 	// Update weights

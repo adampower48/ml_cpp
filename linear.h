@@ -1,6 +1,6 @@
 #pragma once
 #include <tuple>
-#include <utility>
+
 
 #include "matrix.h"
 
@@ -22,7 +22,7 @@ public:
 
 	Matrix forward(Matrix input);
 
-	std::tuple<Matrix, Matrix> calculateGradient(Matrix input, Matrix linearOutput, Matrix target);
+	std::tuple<Matrix, Matrix> calculateGradient(Matrix input, Matrix nextGrads);
 
 	void updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate);
 };

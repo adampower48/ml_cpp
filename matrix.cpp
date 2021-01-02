@@ -2,9 +2,6 @@
 
 #include <iostream>
 #include <random>
-#include <vector>
-
-#include "helpers.h"
 
 
 Matrix::Matrix(int h, int w){

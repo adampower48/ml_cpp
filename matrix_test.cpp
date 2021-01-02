@@ -7,6 +7,8 @@
 #include <tuple>
 
 #include "linear.h"
+#include "loss.h"
+
 
 void testMatOps(){
 	Matrix a(4, 3), b(3, 5), d(1, 5);
@@ -51,34 +53,47 @@ void testMatOps(){
 }
 
 void testLinear(){
-	Linear linear = Linear(4, 8);
+	Linear linear = Linear(4, 1);
 	// linear.initRange();
 	linear.initNormal();
 	linear.print();
 
-	Matrix input = Matrix(3, 4);
+	Matrix input = Matrix(2, 4);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	Matrix out = linear.forward(input);
-	std::cout << "Output:\n";
-	out.print();
-
-	Matrix targets = Matrix(3, 8);
+	Matrix targets = Matrix(2, 1);
 	targets.initRange();
 	std::cout << "Targets:\n";
 	targets.print();
 
-	auto [gradWeights, gradBiases] = linear.calculateGradient(input, out, targets);
-	std::cout << "\nGradients:\n" << "Weights:\n";
-	gradWeights.print();
-	std::cout << "Biases:\n";
-	gradBiases.print();
+	MeanSquaredError mse;
 
-	linear.updateWeights(gradWeights, gradBiases, 0.01);
-	std::cout << "Updated:\n";
-	linear.print();
+	std::cout << "===================================================================\n";
+	for (int i = 0; i < 100; ++i) {
+		Matrix out = linear.forward(input);
+		std::cout << "Output:\n";
+		out.print();
+
+		// D = Y - Y*
+		Matrix lossGrads = mse.gradient(targets, out);
+		std::cout << "Loss Gradients:\n";
+		lossGrads.print();
+		
+		auto [gradWeights, gradBiases] = linear.calculateGradient(input, lossGrads);
+		// std::cout << "\nGradients:\n" << "Weights:\n";
+		// gradWeights.print();
+		// std::cout << "Biases:\n";
+		// gradBiases.print();
+
+		linear.updateWeights(gradWeights, gradBiases, 0.01f);
+		// std::cout << "Updated:\n";
+		// linear.print();
+		
+		out = linear.forward(input);
+		std::cout << "MSE: " << mse.loss(targets, out) << "\n=====================================================================\n";
+	}
 
 
 }

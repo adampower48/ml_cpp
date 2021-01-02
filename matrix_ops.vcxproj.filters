@@ -24,6 +24,9 @@
     <ClCompile Include="matrix_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="loss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="linear.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
