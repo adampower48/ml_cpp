@@ -11,6 +11,8 @@ public:
 
 	void initRange();
 
+	void initNormal(const int seed = 0);
+
 	Matrix matmul(Matrix other);
 
 	Matrix add(Matrix other);

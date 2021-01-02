@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
 
 #include "helpers.h"
 
@@ -26,6 +27,16 @@ void Matrix::initRange(){
 	// Initialise the matrix with an increasing sequence of values
 	for (auto i = 0; i < height * width; ++i) {
 		data[i] = static_cast<float>(i);
+	}
+}
+
+void Matrix::initNormal(const int seed) {
+	// Initialise the matrix with random values from a Normal(0, 1) distribution.
+	std::default_random_engine gen(seed);
+	std::normal_distribution<float> normal;
+
+	for (auto i = 0; i < height * width; ++i) {
+		data[i] = normal(gen);
 	}
 }
 

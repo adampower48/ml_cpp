@@ -38,7 +38,8 @@ void testMatOps(){
 
 void testLinear(){
 	Linear linear = Linear(4, 8);
-	linear.initRange();
+	// linear.initRange();
+	linear.initNormal();
 	linear.print();
 
 	Matrix input = Matrix(3, 4);

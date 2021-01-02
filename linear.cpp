@@ -1,10 +1,8 @@
-#include "matrix.h"
-
 #include "linear.h"
 
 #include <iostream>
+#include <ctime>
 
-#include "matrix.h"
 
 Linear::Linear(int input_size, int units){
 	Linear::input_size = input_size;
@@ -17,6 +15,12 @@ Linear::Linear(int input_size, int units){
 void Linear::initRange(){
 	weights->initRange();
 	biases->initRange();
+}
+
+void Linear::initNormal(){
+	const auto seed = static_cast<int>(time(NULL)); // Seed with current time
+	weights->initNormal(seed);
+	biases->initNormal(seed + 1);
 }
 
 void Linear::print(){
