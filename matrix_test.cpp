@@ -53,17 +53,17 @@ void testMatOps(){
 }
 
 void testLinear(){
-	Linear linear = Linear(4, 1);
+	Linear linear = Linear(4, 3);
 	// linear.initRange();
 	linear.initNormal();
 	linear.print();
 
-	Matrix input = Matrix(2, 4);
+	Matrix input = Matrix(3, 4);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	Matrix targets = Matrix(2, 1);
+	Matrix targets = Matrix(3, 3);
 	targets.initRange();
 	std::cout << "Targets:\n";
 	targets.print();
@@ -71,15 +71,15 @@ void testLinear(){
 	MeanSquaredError mse;
 
 	std::cout << "===================================================================\n";
-	for (int i = 0; i < 100; ++i) {
+	for (int i = 0; i < 1000; ++i) {
 		Matrix out = linear.forward(input);
-		std::cout << "Output:\n";
-		out.print();
+		// std::cout << "Output:\n";
+		// out.print();
 
 		// D = Y - Y*
 		Matrix lossGrads = mse.gradient(targets, out);
-		std::cout << "Loss Gradients:\n";
-		lossGrads.print();
+		// std::cout << "Loss Gradients:\n";
+		// lossGrads.print();
 		
 		auto [gradWeights, gradBiases] = linear.calculateGradient(input, lossGrads);
 		// std::cout << "\nGradients:\n" << "Weights:\n";

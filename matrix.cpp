@@ -23,7 +23,7 @@ void Matrix::print(){
 void Matrix::initRange(){
 	// Initialise the matrix with an increasing sequence of values
 	for (auto i = 0; i < height * width; ++i) {
-		data[i] = static_cast<float>(i);
+		data[i] = static_cast<float>(i) / (height * width);
 	}
 }
 
