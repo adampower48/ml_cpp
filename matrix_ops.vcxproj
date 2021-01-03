@@ -148,12 +148,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="activation.cpp" />
     <ClCompile Include="linear.cpp" />
     <ClCompile Include="loss.cpp" />
     <ClCompile Include="matrix_test.cpp" />
     <ClCompile Include="matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="activation.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="linear.h" />
     <ClInclude Include="loss.h" />

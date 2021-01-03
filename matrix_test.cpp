@@ -6,6 +6,8 @@
 #include <iostream>
 #include <tuple>
 
+
+#include "activation.h"
 #include "linear.h"
 #include "loss.h"
 
@@ -80,7 +82,7 @@ void testLinear(){
 		Matrix lossGrads = mse.gradient(targets, out);
 		// std::cout << "Loss Gradients:\n";
 		// lossGrads.print();
-		
+
 		auto [gradWeights, gradBiases] = linear.calculateGradient(input, lossGrads);
 		// std::cout << "\nGradients:\n" << "Weights:\n";
 		// gradWeights.print();
@@ -90,16 +92,46 @@ void testLinear(){
 		linear.updateWeights(gradWeights, gradBiases, 0.01f);
 		// std::cout << "Updated:\n";
 		// linear.print();
-		
+
 		out = linear.forward(input);
-		std::cout << "MSE: " << mse.loss(targets, out) << "\n=====================================================================\n";
+		std::cout << "MSE: " << mse.loss(targets, out) <<
+			"\n=====================================================================\n";
 	}
 
 
 }
 
+void testActivation(){
+	ReLU relu;
+	MeanSquaredError mse;
+
+
+	Matrix input = Matrix(3, 4);
+	input.initRange();
+	std::cout << "Input:\n";
+	input.print();
+
+	Matrix targets = Matrix(3, 4);
+	targets.initRange();
+	std::cout << "Targets:\n";
+	targets.print();
+
+	Matrix out = relu.forward(input);
+	std::cout << "Outputs:\n";
+	out.print();
+
+	Matrix mseGrads = mse.gradient(targets, out);
+	Matrix grads = relu.gradient(input, mseGrads);
+	std::cout << "Gradients:\nMSE:\n";
+	mseGrads.print();
+	std::cout << "relu:\n";
+	grads.print();
+}
+
+
 int main(){
 	std::cout << "Hello World!\n";
 	// testMatOps();
-	testLinear();
+	// testLinear();
+	testActivation();
 }
