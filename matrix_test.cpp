@@ -223,25 +223,39 @@ void testNN(){
 
 void testNDMatOps(){
 	// Constructor
-	std::vector<size_t> aShape{ 1, 2, 3 };
-	Tensor a(aShape);
+	std::vector<size_t> aShape{1, 2, 3};
+	std::vector<size_t> bShape{ 1, 3, 4 };
+	Tensor a(aShape), b(bShape);
 
 	// Init Range
 	a.initRange();
+	std::cout << "A:\n";
 	a.print();
 
 	// Init Normal
-	a.initNormal();
-	a.print();
-
-	// Reshaping
-	std::vector<size_t> bShape{2, 1, 3};
-	Tensor b = a.reshape(bShape);
+	b.initNormal();
+	std::cout << "B:\n";
 	b.print();
 
-	
+	// Indexing
+	std::vector<size_t> idx{ 0, 1, 2 };
+	std::cout << "A[0]: " << a[0] << "\n";
+	std::cout << "A[1]: " << a[1] << "\n";
+	std::cout << "A[2]: " << a[2] << "\n";
+	std::cout << "A[0, 1, 2]: " << a[&idx] << "\n";
 
-	
+	// Reshaping
+	std::vector<size_t> cShape{2, 1, 3};
+	Tensor c = a.reshape(cShape);
+	std::cout << "C = A (1, 2, 3) -> (2, 1, 3):\n";
+	c.print();
+
+	// Matrix multiplication
+	Tensor d = a.matmul(b);
+	std::cout << "D = AB:\n";
+	d.print();
+
+
 }
 
 int main(){

@@ -33,6 +33,7 @@ public:
 class Tensor {
 public:
 	std::vector<size_t> shape;
+	size_t nDims;
 	size_t size;
 	float* data;
 
@@ -51,9 +52,19 @@ public:
 	Tensor add(Tensor other);
 
 	Tensor sub(Tensor other);
+
+
+	float& operator[](const std::size_t i){ return data[i]; }
+
+	float& operator[](const int i){ return operator[](static_cast<size_t>(i)); }
+
+	float& operator[](const std::vector<size_t>* idx);
+
 };
 
 void matmul(const float* a, const float* b, float* out, int height, int width, int common);
+
+void matmul(const float* a, const float* b, float* out, size_t batchDims, size_t height, size_t width, size_t common);
 
 void addMatrixMatrix(const float* a, const float* b, float* out, int height, int width);
 
