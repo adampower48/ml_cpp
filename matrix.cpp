@@ -3,6 +3,8 @@
 #include <iostream>
 #include <random>
 
+#include "helpers.h"
+
 
 Matrix::Matrix(int h, int w){
 	height = h;
@@ -162,4 +164,71 @@ void subMatrixVector(const float* a, const float* b, float* out, const int heigh
 			out[i * width + j] = a[i * width + j] - b[j];
 		}
 	}
+}
+
+Tensor::Tensor(std::vector<size_t> shape, bool copy){
+	Tensor::shape = shape;
+	size = 1;
+	for (size_t dim : shape) {
+		size *= dim;
+	}
+
+	if (copy) {
+		data = new float[size]{0};
+	}
+
+}
+
+void Tensor::print(){
+	// Pretty printing for tensor
+
+	// Print shape
+	std::cout << "Shape: " << size << " " << strVector<size_t>(shape) << "\n";
+
+
+	// Print elements TODO: Pretty printing
+	for (size_t i = 0; i < size; ++i) {
+		std::cout << data[i] << "\t";
+	}
+	std::cout << "\n";
+
+
+}
+
+void Tensor::initRange(){
+	// Initialise the tensor with an increasing sequence of values
+	for (size_t i = 0; i < size; ++i) {
+		data[i] = static_cast<float>(i) / size;
+	}
+}
+
+void Tensor::initNormal(const int seed){
+	// Initialise the tensor with random values from a Normal(0, 1) distribution.
+	std::default_random_engine gen(seed);
+	std::normal_distribution<float> normal;
+
+	for (size_t i = 0; i < size; ++i) {
+		data[i] = normal(gen);
+	}
+}
+
+Tensor Tensor::reshape(std::vector<size_t> shape){
+	// Reshape the tensor, keeping same underlying data
+
+	// Verify same total elements
+	size_t tmpSize = 1;
+	for (size_t dim : shape) {
+		tmpSize *= dim;
+	}
+
+	if (size != tmpSize) {
+		std::cout << "Number of elements do not match: " << strVector<size_t>(Tensor::shape) << ", " << strVector<size_t
+		>(shape) << "\n";
+		throw std::invalid_argument("Size mismatch for tensor reshaping.");
+	}
+
+	Tensor newTensor(shape, false);
+	newTensor.data = data;
+
+	return newTensor;
 }

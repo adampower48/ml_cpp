@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="activation.cpp" />
+    <ClCompile Include="helpers.cpp" />
     <ClCompile Include="linear.cpp" />
     <ClCompile Include="loss.cpp" />
     <ClCompile Include="matrix_test.cpp" />

@@ -10,6 +10,7 @@
 #include "activation.h"
 #include "linear.h"
 #include "loss.h"
+#include "helpers.h"
 
 
 void testMatOps(){
@@ -220,10 +221,34 @@ void testNN(){
 
 }
 
+void testNDMatOps(){
+	// Constructor
+	std::vector<size_t> aShape{ 1, 2, 3 };
+	Tensor a(aShape);
+
+	// Init Range
+	a.initRange();
+	a.print();
+
+	// Init Normal
+	a.initNormal();
+	a.print();
+
+	// Reshaping
+	std::vector<size_t> bShape{2, 1, 3};
+	Tensor b = a.reshape(bShape);
+	b.print();
+
+	
+
+	
+}
+
 int main(){
 	std::cout << "Hello World!\n";
-	testMatOps();
+	// testMatOps();
 	// testLinear();
 	// testActivation();
 	// testNN();
+	testNDMatOps();
 }

@@ -13,7 +13,7 @@ public:
 
 	void initRange();
 
-	void initNormal(const int seed = 0);
+	void initNormal(int seed = 0);
 
 	Matrix matmul(Matrix other);
 
@@ -30,13 +30,35 @@ public:
 	Matrix operator-(Matrix other){ return sub(other); };
 };
 
+class Tensor {
+public:
+	std::vector<size_t> shape;
+	size_t size;
+	float* data;
 
-void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common);
+	Tensor(std::vector<size_t> shape, bool copy = true);
 
-void addMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width);
+	void print();
 
-void addMatrixVector(const float* a, const float* b, float* out, const int height, const int width);
+	void initRange();
 
-void subMatrixMatrix(const float* a, const float* b, float* out, const int height, const int width);
+	void initNormal(int seed = 0);
 
-void subMatrixVector(const float* a, const float* b, float* out, const int height, const int width);
+	Tensor reshape(std::vector<size_t> shape);
+
+	Tensor matmul(Tensor other);
+
+	Tensor add(Tensor other);
+
+	Tensor sub(Tensor other);
+};
+
+void matmul(const float* a, const float* b, float* out, int height, int width, int common);
+
+void addMatrixMatrix(const float* a, const float* b, float* out, int height, int width);
+
+void addMatrixVector(const float* a, const float* b, float* out, int height, int width);
+
+void subMatrixMatrix(const float* a, const float* b, float* out, int height, int width);
+
+void subMatrixVector(const float* a, const float* b, float* out, int height, int width);
