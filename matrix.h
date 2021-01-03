@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 class Matrix {
 public:
 	int height;
@@ -18,7 +20,16 @@ public:
 	Matrix add(Matrix other);
 
 	Matrix sub(Matrix other);
+
+	float& operator[](const std::size_t i){ return data[i]; };
+
+	Matrix operator*(Matrix other){ return matmul(other); };
+
+	Matrix operator+(Matrix other){ return add(other); };
+
+	Matrix operator-(Matrix other){ return sub(other); };
 };
+
 
 void matmul(const float* a, const float* b, float* out, const int height, const int width, const int common);
 

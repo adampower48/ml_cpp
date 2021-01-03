@@ -52,6 +52,41 @@ void testMatOps(){
 	std::cout << "H = C - D\n";
 	h.print();
 
+	// * Operator
+	Matrix i = a * b;
+	std::cout << "I = AB\n";
+	i.print();
+
+	// + Operator (Mat-Mat)
+	Matrix j = a + a;
+	std::cout << "J = A + A\n";
+	j.print();
+
+	// + Operator (Mat-Vec)
+	Matrix k = c + d;
+	std::cout << "K = C + D\n";
+	k.print();
+
+	// - Operator (Mat-Mat)
+	Matrix l = a - a;
+	std::cout << "L = A - A\n";
+	l.print();
+
+	// - Operator (Mat-Vec)
+	Matrix m = c - d;
+	std::cout << "M = C - D\n";
+	m.print();
+
+	// [] Operator (read)
+	std::cout << "M[0]: " << m[0] << "\n";
+	std::cout << "M[1]: " << m[1] << "\n";
+	std::cout << "M[2]: " << m[2] << "\n";
+
+	// [] Operator (write)
+	m[0] = 100;
+	std::cout << "M[0] = 100:\n";
+	m.print();
+
 }
 
 void testLinear(){
@@ -187,8 +222,8 @@ void testNN(){
 
 int main(){
 	std::cout << "Hello World!\n";
-	// testMatOps();
+	testMatOps();
 	// testLinear();
 	// testActivation();
-	testNN();
+	// testNN();
 }
