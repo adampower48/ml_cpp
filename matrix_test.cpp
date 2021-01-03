@@ -128,10 +128,67 @@ void testActivation(){
 	grads.print();
 }
 
+void testNN(){
+	Matrix input = Matrix(3, 4);
+	input.initRange();
+	std::cout << "Input:\n";
+	input.print();
+
+	Matrix targets = Matrix(3, 2);
+	targets.initRange();
+	std::cout << "Targets:\n";
+	targets.print();
+
+
+	ReLU relu;
+	MeanSquaredError mse;
+
+	// Layers
+	Linear linear1 = Linear(4, 8);
+	linear1.initNormal();
+	Linear linear2 = Linear(8, 8);
+	linear2.initNormal();
+	Linear linear3 = Linear(8, 2);
+	linear3.initNormal();
+
+	float lr = 0.0001f;
+
+	// Training
+	for (int i = 0; i < 100; ++i) {
+		// Forward
+		Matrix outLinear1 = linear1.forward(input);
+		Matrix outRelu1 = relu.forward(outLinear1);
+		Matrix outLinear2 = linear2.forward(outRelu1);
+		Matrix outRelu2 = relu.forward(outLinear2);
+		Matrix outLinear3 = linear3.forward(outRelu2);
+
+		// Gradients
+		Matrix mseGrad = mse.gradient(targets, outLinear3);
+		auto [linearGradWeights3, linearGradBiases3] = linear3.calculateGradient(outRelu2, mseGrad);
+		Matrix reluGrad2 = relu.gradient(outLinear2, linearGradWeights3);
+		auto [linearGradWeights2, linearGradBiases2] = linear2.calculateGradient(outRelu1, reluGrad2);
+		Matrix reluGrad1 = relu.gradient(outLinear1, linearGradWeights2);
+		auto [linearGradWeights1, linearGradBiases1] = linear1.calculateGradient(input, reluGrad1);
+
+
+		// Update weights
+		linear1.updateWeights(linearGradWeights1, linearGradBiases1, lr);
+		linear2.updateWeights(linearGradWeights2, linearGradBiases2, lr);
+		linear3.updateWeights(linearGradWeights3, linearGradBiases3, lr);
+
+		// Loss
+		float loss = mse.loss(targets, outLinear3);
+		std::cout << loss << "\n";
+
+	}
+
+
+}
 
 int main(){
 	std::cout << "Hello World!\n";
 	// testMatOps();
 	// testLinear();
-	testActivation();
+	// testActivation();
+	testNN();
 }
