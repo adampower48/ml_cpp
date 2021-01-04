@@ -79,8 +79,10 @@ void subMatrixVector(const float* a, const float* b, float* out, int height, int
 
 std::vector<size_t> buildIndexer(const std::vector<size_t>* shape);
 
-void add(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
-         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape);
+void add(const float* a, const float* b, float* out, const std::vector<size_t>* aIndexer,
+	const std::vector<size_t>* bIndexer, const std::vector<size_t>* outIndexer,
+	const std::vector<size_t>* outShape);
 
-void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
-         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape);
+void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aIndexer,
+	const std::vector<size_t>* bIndexer, const std::vector<size_t>* outIndexer,
+	const std::vector<size_t>* outShape);

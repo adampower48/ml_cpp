@@ -2,13 +2,11 @@
 //
 
 #include "matrix.h"
-#include "matrix.h"
 
 #include <iostream>
 #include <tuple>
 
 #include "activation.h"
-#include "helpers.h"
 #include "linear.h"
 #include "loss.h"
 

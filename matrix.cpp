@@ -290,7 +290,7 @@ Tensor Tensor::add(Tensor other){
 	}
 
 	Tensor newTensor(newShape);
-	::add(data, other.data, newTensor.data, &shape, &other.shape, &newShape);
+	::add(data, other.data, newTensor.data, &indexer, &other.indexer, &newTensor.indexer, &newShape);
 
 	return newTensor;
 }
@@ -319,7 +319,7 @@ Tensor Tensor::sub(Tensor other){
 	}
 
 	Tensor newTensor(newShape);
-	::sub(data, other.data, newTensor.data, &shape, &other.shape, &newShape);
+	::sub(data, other.data, newTensor.data, &indexer, &other.indexer, &newTensor.indexer, &newShape);
 
 	return newTensor;
 }
@@ -346,32 +346,27 @@ void matmul(const float* a, const float* b, float* out, const size_t batchDims, 
 }
 
 
-void add(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
-         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape){
-
-	auto aIndexers = buildIndexer(aShape);
-	auto bIndexers = buildIndexer(bShape);
-	auto outIndexers = buildIndexer(outShape);
+void add(const float* a, const float* b, float* out, const std::vector<size_t>* aIndexer,
+         const std::vector<size_t>* bIndexer, const std::vector<size_t>* outIndexer,
+         const std::vector<size_t>* outShape){
 
 	for (size_t i = 0; i < vectorProd<size_t>(outShape, 0, outShape->size()); ++i) {
-		auto x = vectorUnravel(&outIndexers, i);
-		auto aIdx = vectorDot<size_t>(&x, &aIndexers);
-		auto bIdx = vectorDot<size_t>(&x, &bIndexers);
+		auto x = vectorUnravel(outIndexer, i);
+		auto aIdx = vectorDot<size_t>(&x, aIndexer);
+		auto bIdx = vectorDot<size_t>(&x, bIndexer);
 
 		out[i] = a[aIdx] + b[bIdx];
 	}
 }
 
-void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
-         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape){
-	auto aIndexers = buildIndexer(aShape);
-	auto bIndexers = buildIndexer(bShape);
-	auto outIndexers = buildIndexer(outShape);
+void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aIndexer,
+         const std::vector<size_t>* bIndexer, const std::vector<size_t>* outIndexer,
+         const std::vector<size_t>* outShape){
 
 	for (size_t i = 0; i < vectorProd<size_t>(outShape, 0, outShape->size()); ++i) {
-		auto x = vectorUnravel(&outIndexers, i);
-		auto aIdx = vectorDot<size_t>(&x, &aIndexers);
-		auto bIdx = vectorDot<size_t>(&x, &bIndexers);
+		auto x = vectorUnravel(outIndexer, i);
+		auto aIdx = vectorDot<size_t>(&x, aIndexer);
+		auto bIdx = vectorDot<size_t>(&x, bIndexer);
 
 		out[i] = a[aIdx] - b[bIdx];
 	}
