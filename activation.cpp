@@ -4,18 +4,19 @@
 
 #include "matrix.h"
 
-Matrix ReLU::forward(Matrix input){
-	Matrix out = Matrix(input.height, input.width);
-	for (int i = 0; i < input.height * input.width; ++i) {
+
+Tensor ReLU::forward(Tensor input){
+	Tensor out = Tensor(input.shape);
+	for (int i = 0; i < input.shape[0] * input.shape[1]; ++i) {
 		out.data[i] = std::max(0.0f, input.data[i]);
 	}
 
 	return out;
 }
 
-Matrix ReLU::gradient(Matrix input, Matrix nextGrads){
-	Matrix grads = Matrix(input.height, input.width);
-	for (int i = 0; i < input.height * input.width; ++i) {
+Tensor ReLU::gradient(Tensor input, Tensor nextGrads){
+	Tensor grads = Tensor(input.shape);
+	for (int i = 0; i < input.shape[0] * input.shape[1]; ++i) {
 		grads.data[i] = input.data[i] > 0 ? nextGrads.data[i] : 0;
 	}
 

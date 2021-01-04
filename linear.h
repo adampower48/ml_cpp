@@ -5,14 +5,15 @@
 #include "matrix.h"
 
 
+
 class Linear {
 public:
-	int input_size;
-	int output_size;
-	Matrix* weights;
-	Matrix* biases;
+	size_t input_size;
+	size_t output_size;
+	Tensor* weights;
+	Tensor* biases;
 
-	Linear(int input_size, int units);
+	Linear(size_t input_size, size_t units);
 
 	void initRange();
 
@@ -20,9 +21,9 @@ public:
 
 	void print();
 
-	Matrix forward(Matrix input);
+	Tensor forward(Tensor input);
 
-	std::tuple<Matrix, Matrix> calculateGradient(Matrix input, Matrix nextGrads);
+	std::tuple<Tensor, Tensor> calculateGradient(Tensor input, Tensor nextGrads);
 
-	void updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate);
+	void updateWeights(Tensor gradWeights, Tensor gradBiases, float learningRate);
 };

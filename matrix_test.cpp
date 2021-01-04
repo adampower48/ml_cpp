@@ -94,12 +94,14 @@ void testLinear(){
 	linear.initNormal();
 	linear.print();
 
-	Matrix input = Matrix(3, 4);
+	std::vector<size_t> inputShape{3, 4};
+	Tensor input = Tensor(inputShape);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	Matrix targets = Matrix(3, 3);
+	std::vector<size_t> targetShape{3, 3};
+	Tensor targets = Tensor(targetShape);
 	targets.initRange();
 	std::cout << "Targets:\n";
 	targets.print();
@@ -108,12 +110,12 @@ void testLinear(){
 
 	std::cout << "===================================================================\n";
 	for (int i = 0; i < 1000; ++i) {
-		Matrix out = linear.forward(input);
+		Tensor out = linear.forward(input);
 		// std::cout << "Output:\n";
 		// out.print();
 
 		// D = Y - Y*
-		Matrix lossGrads = mse.gradient(targets, out);
+		Tensor lossGrads = mse.gradient(targets, out);
 		// std::cout << "Loss Gradients:\n";
 		// lossGrads.print();
 
@@ -139,36 +141,41 @@ void testActivation(){
 	ReLU relu;
 	MeanSquaredError mse;
 
-
-	Matrix input = Matrix(3, 4);
+	std::vector<size_t> inputShape{3, 4};
+	Tensor input = Tensor(inputShape);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	Matrix targets = Matrix(3, 4);
+	std::vector<size_t> targetsShape{3, 4};
+	Tensor targets = Tensor(targetsShape);
 	targets.initRange();
 	std::cout << "Targets:\n";
 	targets.print();
 
-	Matrix out = relu.forward(input);
+	Tensor out = relu.forward(input);
 	std::cout << "Outputs:\n";
 	out.print();
 
-	Matrix mseGrads = mse.gradient(targets, out);
-	Matrix grads = relu.gradient(input, mseGrads);
+	Tensor mseGrads = mse.gradient(targets, out);
+	Tensor grads = relu.gradient(input, mseGrads);
 	std::cout << "Gradients:\nMSE:\n";
 	mseGrads.print();
 	std::cout << "relu:\n";
 	grads.print();
 }
 
+
 void testNN(){
-	Matrix input = Matrix(3, 4);
+
+	std::vector<size_t> inputShape{ 3, 4 };
+	Tensor input = Tensor(inputShape);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	Matrix targets = Matrix(3, 2);
+	std::vector<size_t> targetsShape{ 3, 2 };
+	Tensor targets = Tensor(targetsShape);
 	targets.initRange();
 	std::cout << "Targets:\n";
 	targets.print();
@@ -190,18 +197,18 @@ void testNN(){
 	// Training
 	for (int i = 0; i < 100; ++i) {
 		// Forward
-		Matrix outLinear1 = linear1.forward(input);
-		Matrix outRelu1 = relu.forward(outLinear1);
-		Matrix outLinear2 = linear2.forward(outRelu1);
-		Matrix outRelu2 = relu.forward(outLinear2);
-		Matrix outLinear3 = linear3.forward(outRelu2);
+		Tensor outLinear1 = linear1.forward(input);
+		Tensor outRelu1 = relu.forward(outLinear1);
+		Tensor outLinear2 = linear2.forward(outRelu1);
+		Tensor outRelu2 = relu.forward(outLinear2);
+		Tensor outLinear3 = linear3.forward(outRelu2);
 
 		// Gradients
-		Matrix mseGrad = mse.gradient(targets, outLinear3);
+		Tensor mseGrad = mse.gradient(targets, outLinear3);
 		auto [linearGradWeights3, linearGradBiases3] = linear3.calculateGradient(outRelu2, mseGrad);
-		Matrix reluGrad2 = relu.gradient(outLinear2, linearGradWeights3);
+		Tensor reluGrad2 = relu.gradient(outLinear2, linearGradWeights3);
 		auto [linearGradWeights2, linearGradBiases2] = linear2.calculateGradient(outRelu1, reluGrad2);
-		Matrix reluGrad1 = relu.gradient(outLinear1, linearGradWeights2);
+		Tensor reluGrad1 = relu.gradient(outLinear1, linearGradWeights2);
 		auto [linearGradWeights1, linearGradBiases1] = linear1.calculateGradient(input, reluGrad1);
 
 
@@ -219,7 +226,7 @@ void testNN(){
 
 }
 
-void testNDMatOps(){
+void testTensorOps(){
 	// Constructor
 	std::vector<size_t> aShape{1, 2, 3};
 	std::vector<size_t> bShape{1, 3, 4};
@@ -272,7 +279,7 @@ void testNDMatOps(){
 	Tensor h = a.sub(c);
 	std::cout << "H = A - C:\n";
 	h.print();
-	
+
 
 }
 
@@ -280,7 +287,8 @@ int main(){
 	std::cout << "Hello World!\n";
 	// testMatOps();
 	// testLinear();
+	// testLinear();
 	// testActivation();
 	// testNN();
-	testNDMatOps();
+	// testTensorOps();
 }

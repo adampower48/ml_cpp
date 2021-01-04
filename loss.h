@@ -4,15 +4,15 @@
 
 class Loss {
 public:
-	virtual float loss(Matrix truth, Matrix pred) = 0;
+	virtual float loss(Tensor truth, Tensor pred) = 0;
 
-	virtual Matrix gradient(Matrix truth, Matrix pred) = 0;
+	virtual Tensor gradient(Tensor truth, Tensor pred) = 0;
 
 };
 
 class MeanSquaredError : public Loss {
 public:
-	float loss(Matrix truth, Matrix pred) override;
+	float loss(Tensor truth, Tensor pred) override;
 
-	Matrix gradient(Matrix truth, Matrix pred) override;
+	Tensor gradient(Tensor truth, Tensor pred) override;
 };

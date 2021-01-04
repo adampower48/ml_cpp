@@ -1,18 +1,19 @@
 #pragma once
 #include "matrix.h"
 
+
 class Activation {
 public:
-	virtual Matrix forward(Matrix input) = 0;
+	virtual Tensor forward(Tensor input) = 0;
 
-	virtual Matrix gradient(Matrix input, Matrix nextGrads) = 0;
+	virtual Tensor gradient(Tensor input, Tensor nextGrads) = 0;
 
 };
 
 class ReLU : public Activation {
 public:
-	virtual Matrix forward(Matrix input) override;
+	Tensor forward(Tensor input) override;
 
-	virtual Matrix gradient(Matrix input, Matrix nextGrads) override;
-	
+	Tensor gradient(Tensor input, Tensor nextGrads) override;
+
 };

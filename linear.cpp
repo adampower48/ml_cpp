@@ -4,13 +4,14 @@
 #include <iostream>
 #include <tuple>
 
-
-Linear::Linear(int input_size, int units){
+Linear::Linear(size_t input_size, size_t units){
 	Linear::input_size = input_size;
 	output_size = units;
 
-	weights = new Matrix(input_size, units);
-	biases = new Matrix(1, units);
+	std::vector<size_t> weightShape{input_size, units};
+	std::vector<size_t> biasShape{1, units};
+	weights = new Tensor(weightShape);
+	biases = new Tensor(biasShape);
 }
 
 void Linear::initRange(){
@@ -24,6 +25,7 @@ void Linear::initNormal(){
 	biases->initNormal(seed + 1);
 }
 
+
 void Linear::print(){
 	std::cout << "Weights:\n";
 	weights->print();
@@ -32,41 +34,40 @@ void Linear::print(){
 	biases->print();
 }
 
-Matrix Linear::forward(Matrix input){
-	// Y = WX + B
+Tensor Linear::forward(Tensor input){
+	// Y = XW + B
 	// input: array of size (height, width)
 
 	return input.matmul(*weights).add(*biases);
 }
 
-std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix nextGrads){
+std::tuple<Tensor, Tensor> Linear::calculateGradient(Tensor input, Tensor nextGrads){
 	// Computes gradient
 
 
 	// Bias gradient
 	// Gb = D
-	Matrix gradBias = Matrix(1, biases->width);
-	for (int i = 0; i < input.height; ++i) {
+	Tensor gradBias = Tensor(biases->shape);
+	for (size_t i = 0; i < biases->shape[0]; ++i) {
 		// Over batch
-		for (int j = 0; j < biases->width; ++j) {
+		for (size_t j = 0; j < biases->shape[1]; ++j) {
 			// Over nodes
-			gradBias.data[j] += nextGrads.data[i * nextGrads.width + j];
+			gradBias.data[j] += nextGrads.data[i * nextGrads.shape[1] + j];
 		}
 	}
 
 
 	// Weight gradient
 	// Gw = DX
-	Matrix gradWeights = Matrix(weights->height, weights->width);
-
-	for (int k = 0; k < input.height; ++k) {
+	Tensor gradWeights = Tensor(weights->shape);
+	for (size_t k = 0; k < input.shape[0]; ++k) {
 		// Over batch
-		for (int i = 0; i < weights->width; ++i) {
+		for (size_t i = 0; i < weights->shape[1]; ++i) {
 			// Over nodes
-			for (int j = 0; j < weights->height; ++j) {
+			for (size_t j = 0; j < weights->shape[0]; ++j) {
 				// Over params
-				gradWeights.data[j * weights->width + i] += nextGrads.data[k * nextGrads.width + i] *
-					input.data[k * input.width + j];
+				gradWeights.data[j * weights->shape[1] + i] += nextGrads.data[k * nextGrads.shape[1] + i] *
+					input.data[k * input.shape[1] + j];
 			}
 		}
 	}
@@ -75,14 +76,15 @@ std::tuple<Matrix, Matrix> Linear::calculateGradient(Matrix input, Matrix nextGr
 
 }
 
-void Linear::updateWeights(Matrix gradWeights, Matrix gradBiases, float learningRate){
+
+void Linear::updateWeights(Tensor gradWeights, Tensor gradBiases, float learningRate){
 	// Update biases
-	for (int i = 0; i < biases->width; ++i) {
+	for (size_t i = 0; i < biases->shape[1]; ++i) {
 		biases->data[i] += gradBiases.data[i] * learningRate;
 	}
 
 	// Update weights
-	for (int i = 0; i < weights->height * weights->width; ++i) {
+	for (size_t i = 0; i < weights->shape[0] * weights->shape[1]; ++i) {
 		weights->data[i] += gradWeights.data[i] * learningRate;
 	}
 }
