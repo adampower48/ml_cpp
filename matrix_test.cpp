@@ -1,7 +1,7 @@
 // matrix_ops.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "matrix.h"
+#include "tensor.h"
 
 #include <iostream>
 #include <tuple>
@@ -9,84 +9,6 @@
 #include "activation.h"
 #include "linear.h"
 #include "loss.h"
-
-
-void testMatOps(){
-	Matrix a(4, 3), b(3, 5), d(1, 5);
-	a.initRange();
-	b.initRange();
-	d.initRange();
-
-	std::cout << "A\n";
-	a.print();
-
-	std::cout << "B\n";
-	b.print();
-
-	std::cout << "D\n";
-	d.print();
-
-	// MatMul
-	Matrix c = a.matmul(b);
-	std::cout << "C = AB\n";
-	c.print();
-
-	// Mat-Mat Addition
-	Matrix e = a.add(a);
-	std::cout << "E = A + A\n";
-	e.print();
-
-	// Mat-Vec Addition
-	Matrix f = c.add(d);
-	std::cout << "F = C + D\n";
-	f.print();
-
-	// Mat-Mat Subtraction
-	Matrix g = a.sub(a);
-	std::cout << "G = A - A\n";
-	g.print();
-
-	// Mat-Vec Subtraction
-	Matrix h = c.sub(d);
-	std::cout << "H = C - D\n";
-	h.print();
-
-	// * Operator
-	Matrix i = a * b;
-	std::cout << "I = AB\n";
-	i.print();
-
-	// + Operator (Mat-Mat)
-	Matrix j = a + a;
-	std::cout << "J = A + A\n";
-	j.print();
-
-	// + Operator (Mat-Vec)
-	Matrix k = c + d;
-	std::cout << "K = C + D\n";
-	k.print();
-
-	// - Operator (Mat-Mat)
-	Matrix l = a - a;
-	std::cout << "L = A - A\n";
-	l.print();
-
-	// - Operator (Mat-Vec)
-	Matrix m = c - d;
-	std::cout << "M = C - D\n";
-	m.print();
-
-	// [] Operator (read)
-	std::cout << "M[0]: " << m[0] << "\n";
-	std::cout << "M[1]: " << m[1] << "\n";
-	std::cout << "M[2]: " << m[2] << "\n";
-
-	// [] Operator (write)
-	m[0] = 100;
-	std::cout << "M[0] = 100:\n";
-	m.print();
-
-}
 
 void testLinear(){
 	Linear linear = Linear(4, 3);
@@ -168,13 +90,13 @@ void testActivation(){
 
 void testNN(){
 
-	std::vector<size_t> inputShape{ 3, 4 };
+	std::vector<size_t> inputShape{3, 4};
 	Tensor input = Tensor(inputShape);
 	input.initRange();
 	std::cout << "Input:\n";
 	input.print();
 
-	std::vector<size_t> targetsShape{ 3, 2 };
+	std::vector<size_t> targetsShape{3, 2};
 	Tensor targets = Tensor(targetsShape);
 	targets.initRange();
 	std::cout << "Targets:\n";
@@ -202,6 +124,7 @@ void testNN(){
 		Tensor outLinear2 = linear2.forward(outRelu1);
 		Tensor outRelu2 = relu.forward(outLinear2);
 		Tensor outLinear3 = linear3.forward(outRelu2);
+
 
 		// Gradients
 		Tensor mseGrad = mse.gradient(targets, outLinear3);
@@ -281,14 +204,28 @@ void testTensorOps(){
 	h.print();
 
 
+	// * Operator
+	Tensor i = a * b;
+	std::cout << "I = AB\n";
+	i.print();
+
+	// + Operator (Mat-Vec)
+	Tensor j = a + c;
+	std::cout << "J = A + C\n";
+	j.print();
+
+	// - Operator (Mat-Mat)
+	Tensor k = a - a;
+	std::cout << "K = A - A\n";
+	k.print();
+
+
 }
 
 int main(){
 	std::cout << "Hello World!\n";
-	// testMatOps();
-	// testLinear();
+	// testTensorOps();
 	// testLinear();
 	// testActivation();
-	// testNN();
-	// testTensorOps();
+	testNN();
 }

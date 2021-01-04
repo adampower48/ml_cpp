@@ -153,7 +153,7 @@
     <ClCompile Include="linear.cpp" />
     <ClCompile Include="loss.cpp" />
     <ClCompile Include="matrix_test.cpp" />
-    <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="tensor.cpp" />
     <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="helpers.h" />
     <ClInclude Include="linear.h" />
     <ClInclude Include="loss.h" />
-    <ClInclude Include="matrix.h" />
+    <ClInclude Include="tensor.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

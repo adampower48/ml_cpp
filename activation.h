@@ -1,5 +1,5 @@
 #pragma once
-#include "matrix.h"
+#include "tensor.h"
 
 
 class Activation {

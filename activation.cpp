@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "matrix.h"
-
 
 Tensor ReLU::forward(Tensor input){
 	Tensor out = Tensor(input.shape);
