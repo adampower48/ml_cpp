@@ -1,9 +1,10 @@
 #include "matrix.h"
 
+#include <cmath>
 #include <iostream>
 #include <random>
 
-#include "helpers.h"
+#include "vector.h"
 
 
 Matrix::Matrix(int h, int w){
@@ -168,6 +169,7 @@ void subMatrixVector(const float* a, const float* b, float* out, const int heigh
 
 Tensor::Tensor(std::vector<size_t> shape, bool copy){
 	Tensor::shape = shape;
+	indexer = buildIndexer(&shape);
 	nDims = shape.size();
 
 	size = 1;
@@ -181,14 +183,6 @@ Tensor::Tensor(std::vector<size_t> shape, bool copy){
 
 }
 
-float& Tensor::operator[](const std::vector<size_t>* idx){
-	size_t i = 0;
-	for (size_t j = 0; j < nDims; ++j) {
-		i += idx->at(j) * vectorProd<size_t>(&shape, j + 1, idx->size());
-	}
-
-	return data[i];
-};
 
 void Tensor::print(){
 	// Pretty printing for tensor
@@ -272,6 +266,64 @@ Tensor Tensor::matmul(Tensor other){
 	return newTensor;
 }
 
+Tensor Tensor::add(Tensor other){
+	// Check dimensions are valid
+	if (nDims != other.nDims) {
+		std::cout << "Number of dimensions don't match: " << nDims << ", " << other.nDims << "\n";
+		throw std::invalid_argument("Shape mismatch for tensor addition.");
+	}
+
+	// Get new dims
+	std::vector<size_t> newShape(nDims);
+	for (size_t i = 0; i < nDims; ++i) {
+		if (shape[i] == other.shape[i]) {
+			// Same dimensions
+			newShape[i] = shape[i];
+		} else if (shape[i] == 1 || other.shape[i] == 1) {
+			// Broadcasting
+			newShape[i] = std::max(shape[i], other.shape[i]);
+		} else {
+			// Invalid dims
+			std::cout << "Non-broadcastable dimensions: " << strVector(shape) << ", " << strVector(other.shape) << "\n";
+			throw std::invalid_argument("Shape mismatch for tensor addition.");
+		}
+	}
+
+	Tensor newTensor(newShape);
+	::add(data, other.data, newTensor.data, &shape, &other.shape, &newShape);
+
+	return newTensor;
+}
+
+Tensor Tensor::sub(Tensor other){
+	// Check dimensions are valid
+	if (nDims != other.nDims) {
+		std::cout << "Number of dimensions don't match: " << nDims << ", " << other.nDims << "\n";
+		throw std::invalid_argument("Shape mismatch for tensor addition.");
+	}
+
+	// Get new dims
+	std::vector<size_t> newShape(nDims);
+	for (size_t i = 0; i < nDims; ++i) {
+		if (shape[i] == other.shape[i]) {
+			// Same dimensions
+			newShape[i] = shape[i];
+		} else if (shape[i] == 1 || other.shape[i] == 1) {
+			// Broadcasting
+			newShape[i] = std::max(shape[i], other.shape[i]);
+		} else {
+			// Invalid dims
+			std::cout << "Non-broadcastable dimensions: " << strVector(shape) << ", " << strVector(other.shape) << "\n";
+			throw std::invalid_argument("Shape mismatch for tensor addition.");
+		}
+	}
+
+	Tensor newTensor(newShape);
+	::sub(data, other.data, newTensor.data, &shape, &other.shape, &newShape);
+
+	return newTensor;
+}
+
 
 void matmul(const float* a, const float* b, float* out, const size_t batchDims, const size_t height, const size_t width,
             const size_t common){
@@ -290,5 +342,37 @@ void matmul(const float* a, const float* b, float* out, const size_t batchDims, 
 				}
 			}
 		}
+	}
+}
+
+
+void add(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
+         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape){
+
+	auto aIndexers = buildIndexer(aShape);
+	auto bIndexers = buildIndexer(bShape);
+	auto outIndexers = buildIndexer(outShape);
+
+	for (size_t i = 0; i < vectorProd<size_t>(outShape, 0, outShape->size()); ++i) {
+		auto x = vectorUnravel(&outIndexers, i);
+		auto aIdx = vectorDot<size_t>(&x, &aIndexers);
+		auto bIdx = vectorDot<size_t>(&x, &bIndexers);
+
+		out[i] = a[aIdx] + b[bIdx];
+	}
+}
+
+void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
+         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape){
+	auto aIndexers = buildIndexer(aShape);
+	auto bIndexers = buildIndexer(bShape);
+	auto outIndexers = buildIndexer(outShape);
+
+	for (size_t i = 0; i < vectorProd<size_t>(outShape, 0, outShape->size()); ++i) {
+		auto x = vectorUnravel(&outIndexers, i);
+		auto aIdx = vectorDot<size_t>(&x, &aIndexers);
+		auto bIdx = vectorDot<size_t>(&x, &bIndexers);
+
+		out[i] = a[aIdx] - b[bIdx];
 	}
 }

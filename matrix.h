@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+#include "vector.h"
+
 class Matrix {
 public:
 	int height;
@@ -33,6 +35,7 @@ public:
 class Tensor {
 public:
 	std::vector<size_t> shape;
+	std::vector<size_t> indexer;
 	size_t nDims;
 	size_t size;
 	float* data;
@@ -58,7 +61,7 @@ public:
 
 	float& operator[](const int i){ return operator[](static_cast<size_t>(i)); }
 
-	float& operator[](const std::vector<size_t>* idx);
+	float& operator[](const std::vector<size_t>* idx){ return data[vectorDot(&indexer, idx)]; }
 
 };
 
@@ -73,3 +76,11 @@ void addMatrixVector(const float* a, const float* b, float* out, int height, int
 void subMatrixMatrix(const float* a, const float* b, float* out, int height, int width);
 
 void subMatrixVector(const float* a, const float* b, float* out, int height, int width);
+
+std::vector<size_t> buildIndexer(const std::vector<size_t>* shape);
+
+void add(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
+         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape);
+
+void sub(const float* a, const float* b, float* out, const std::vector<size_t>* aShape,
+         const std::vector<size_t>* bShape, const std::vector<size_t>* outShape);

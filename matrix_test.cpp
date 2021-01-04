@@ -2,15 +2,15 @@
 //
 
 #include "matrix.h"
+#include "matrix.h"
 
 #include <iostream>
 #include <tuple>
 
-
 #include "activation.h"
+#include "helpers.h"
 #include "linear.h"
 #include "loss.h"
-#include "helpers.h"
 
 
 void testMatOps(){
@@ -224,7 +224,7 @@ void testNN(){
 void testNDMatOps(){
 	// Constructor
 	std::vector<size_t> aShape{1, 2, 3};
-	std::vector<size_t> bShape{ 1, 3, 4 };
+	std::vector<size_t> bShape{1, 3, 4};
 	Tensor a(aShape), b(bShape);
 
 	// Init Range
@@ -238,7 +238,7 @@ void testNDMatOps(){
 	b.print();
 
 	// Indexing
-	std::vector<size_t> idx{ 0, 1, 2 };
+	std::vector<size_t> idx{0, 1, 1};
 	std::cout << "A[0]: " << a[0] << "\n";
 	std::cout << "A[1]: " << a[1] << "\n";
 	std::cout << "A[2]: " << a[2] << "\n";
@@ -255,6 +255,26 @@ void testNDMatOps(){
 	std::cout << "D = AB:\n";
 	d.print();
 
+	// Addition
+	Tensor e = a.add(a);
+	std::cout << "E = A + A:\n";
+	e.print();
+
+	// Addition w/ broadcasting
+	Tensor f = a.add(c);
+	std::cout << "F = A + C:\n";
+	f.print();
+
+	// Subtraction
+	Tensor g = a.sub(a);
+	std::cout << "G = A - A:\n";
+	g.print();
+
+	// Subtraction w/ broadcasting
+	Tensor h = a.sub(c);
+	std::cout << "H = A - C:\n";
+	h.print();
+	
 
 }
 
